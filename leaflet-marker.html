@@ -1,0 +1,47 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<dom-module id="leaflet-marker">
+  <template>
+    <content id="content"></content>
+  </template>
+  <script>
+   (function() {
+       class LeafletMarker {
+           beforeRegister() {
+               this.is = 'leaflet-marker'
+               this.properties = {
+                   map: {
+                       type: Object
+                   },
+                   marker: {
+                       type: Object
+                   },
+                   options: {
+                       type: Object
+                   },
+                   location: {
+                       type: Array,
+                       value: []
+                   }
+               }
+               this.observers = [
+                   "_createMarker(map)"
+               ]
+           }
+
+           _createMarker(map) {
+               if (!map) return
+
+               this.marker = new L.marker(new L.LatLng(this.location[1], this.location[0]), this.options)
+               let child = Polymer.dom(this).firstElementChild
+               if (child) {
+                   this.marker.bindPopup(child)
+               }
+               this.map.addLayer(this.marker)
+           }
+       }
+       Polymer(LeafletMarker)
+   })();
+       
+  </script>
+</dom-module>

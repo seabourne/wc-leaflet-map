@@ -1,0 +1,74 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../wc-external-scripts-behavior/external-scripts-behavior.html">
+
+<dom-module id="leaflet-controls">
+  <template>
+  </template>
+  <script>
+   (function() {
+       class LeafletControls {
+           beforeRegister() {
+               this.is = 'leaflet-controls'
+               this.properties = {
+                   map: {
+                       type: Object
+                   },
+                   externalJS: {
+                       value: ['https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.2/leaflet.draw.js']
+                   },
+                   externalCSS: {
+                       value: ['https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.2/leaflet.draw.css' ]
+                   },
+                   featureGroup: {
+                       type: Object
+                   },
+                   geo: {
+                       type: Object
+                   },
+                   drawOptions: {
+                       type: Object,
+                       value: {
+                           circle: false,
+                           marker: false
+                       }
+                   }
+               }
+               this.observers = [
+                   "_createControls(externalLoaded, map)"
+               ]
+           }
+
+           get behaviors() {
+               return [ApplicationBehaviors.ExternalScriptsBehavior]
+           }
+
+           ready() {
+           }
+
+           _createControls(loaded, map) {
+               if (!loaded || !map) return
+
+               this.featureGroup = L.featureGroup().addTo(this.map);
+               this.drawControl = new L.Control.Draw({
+                   edit: {
+                       featureGroup: this.featureGroup
+                   },
+                   draw: this.drawOptions
+               }).addTo(this.map);
+               this.map.on('draw:created', (e) => {
+                   this.featureGroup.addLayer(e.layer);
+                   this.set("geo", this.featureGroup.toGeoJSON())
+               });
+               this.map.on('draw:edited', (e) => {
+                   this.set("geo", this.featureGroup.toGeoJSON())
+               });
+               this.map.on('draw:deleted', (e) => {
+                   this.set("geo", this.featureGroup.toGeoJSON())
+               });
+           }
+       }
+       Polymer(LeafletControls)
+   })();
+       
+  </script>
+</dom-module>

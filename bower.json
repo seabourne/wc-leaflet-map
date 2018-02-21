@@ -1,0 +1,27 @@
+{
+  "name": "wc-leaflet-map",
+  "main": "leaflet-map.html",
+  "version": "0.0.1",
+  "homepage": "https://github.com/seabourne/wc-leaflet-map",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/seabourne/wc-leaflet-map.git"
+  },
+  "authors": [
+    "Luke Opperman <luke@seabourneconsulting.com>"
+  ],
+  "description": "Leaflet Map polymer components",
+  "moduleType": [],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "~1.11",
+  }
+}

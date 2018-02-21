@@ -1,0 +1,57 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../wc-external-scripts-behavior/external-scripts-behavior.html">
+
+<dom-module id="leaflet-cluster-group">
+  <template>
+  </template>
+  <script>
+   (function() {
+       class LeafletClusterGroup {
+           beforeRegister() {
+               this.is = 'leaflet-cluster-group'
+               this.properties = {
+                   map: {
+                       type: Object
+                   },
+                   externalJS: {
+                       value: ['https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/leaflet.markercluster.js']
+                   },
+                   externalCSS: {
+                       value: [
+                           'https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.css',
+                           'https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v1.0.0/MarkerCluster.Default.css'
+                       ]
+                   },
+                   markers: {
+                       type: Object,
+                       notify: true
+                   },
+                   locations: {
+                       type: Array,
+                       value: []
+                   }
+               }
+               this.observers = [
+                   "_createCluster(externalLoaded, map)"
+               ]
+           }
+
+           get behaviors() {
+               return [ApplicationBehaviors.ExternalScriptsBehavior]
+           }
+
+           ready() {
+           }
+
+           _createCluster(loaded, map) {
+               if (!loaded || !map) return
+
+               this.markers = new L.MarkerClusterGroup()
+               this.map.addLayer(this.markers)
+           }
+       }
+       Polymer(LeafletClusterGroup)
+   })();
+       
+  </script>
+</dom-module>

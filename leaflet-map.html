@@ -1,0 +1,89 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../wc-external-scripts-behavior/external-scripts-behavior.html">
+
+<dom-module id="leaflet-map">
+  <template>
+    <div id="map" style$="{{style}}"></div>
+  </template>
+  <script>
+   (function() {
+       class LeafletMap {
+           beforeRegister() {
+               this.is = 'leaflet-map'
+               this.properties = {
+                   accessToken: {
+                       type: String
+                   },
+                   externalJS: {
+                       value: ['https://api.mapbox.com/mapbox.js/v3.1.0/mapbox.js']
+                   },
+                   externalCSS: {
+                       value: ['https://api.mapbox.com/mapbox.js/v3.1.0/mapbox.css' ]
+                   },
+                   style: {
+                       type: String
+                   },
+                   tileLayer: {
+                       type: String,
+                       value: 'mapbox.streets'
+                   },
+                   zoomLevel: {
+                       type: Number,
+                       value: 10
+                   },
+                   startingLatLon: {
+                       type: Array,
+                       value: [38.89399, -77.03659]
+                   },
+                   map: {
+                       type: Object,
+                       notify: true
+                   },
+                   options: {
+                       type: Object,
+                       value: {
+                           zoomControl: true,
+                           scrollWheelZoom: false,
+                           touchZoom: false
+                       }
+                   }
+               }
+               this.observers = [
+                   "_loaded(externalLoaded)"
+               ]
+               this.listeners = {
+                   'iron-resize': '_onResize'
+               }
+           }
+
+           get behaviors() {
+               return [Polymer.IronResizableBehavior, ApplicationBehaviors.ExternalScriptsBehavior]
+           }
+
+           _onResize() {
+               if (this.map) this.map.invalidateSize(true)
+           }
+
+           _loaded(loaded) {
+               if (!loaded) return 
+               L.mapbox.accessToken = this.accessToken
+               // wait for display animations
+               this.async(() => {
+                   if (!this.map) {
+                       this.createMap()
+                   }
+               }, 200)
+           }
+
+           createMap() {
+               this.map = L.mapbox.map(this.$.map, this.tileLayer,
+                                       this.options)
+                           .setView(this.startingLatLon, this.zoomLevel);
+           }
+       }
+       Polymer(LeafletMap)
+   })();
+   
+  </script>
+</dom-module>
