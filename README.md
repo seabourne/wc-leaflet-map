@@ -15,6 +15,7 @@ Bower dependency:
 <link rel="import" href="../../../bower_components/wc-leaflet-map/leaflet-marker.html">
 <link rel="import" href="../../../bower_components/wc-leaflet-map/leaflet-cluster-group.html">
 <link rel="import" href="../../../bower_components/wc-leaflet-map/leaflet-controls.html">
+<link rel="import" href="../../../bower_components/wc-leaflet-map/leaflet-geocoder.html">
 
 ```
 
@@ -66,6 +67,22 @@ Defines the following components:
     <leaflet-map map="{{map}}">
       <leaflet-controls map="{{map}}" feature-group="{{featureGroup}}" geo="{{geo}}" draw-options="{L.Control.Draw draw options}">
       </leaflet-controls>
+    </leaflet-map>
+  </template>
+```
+
+### leaflet-geocoder
+
+The created geocoder instance is saved on `map` so multiple `<leaflet-geocoder>` elements will reuse.
+
+```
+  <template is="dom-bind">
+    <leaflet-map map="{{map}}">
+      <leaflet-geocoder map="{{map}}" query="St Louis, MO" query-options="{'country': 'us'}"
+        location="{{geoLocation}}" bounds="{{geoBounds}}" feature="{{geoFeature}}" />
+      <leaflet-marker map="{{map}}" location="{{geoLocation}}">
+        <p>Contents</p>
+      </leaflet-marker>
     </leaflet-map>
   </template>
 ```

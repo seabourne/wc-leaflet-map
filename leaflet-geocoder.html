@@ -1,0 +1,73 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<dom-module id="leaflet-geocoder">
+  <template>
+  </template>
+  <script>
+   (function() {
+       class LeafletGeocoder {
+           beforeRegister() {
+               this.is = 'leaflet-geocoder'
+               this.properties = {
+                   index: {
+                       type: String,
+                       value: 'mapbox.places'
+                   },
+                   query: {
+                       type: String
+                   },
+                   location: {
+                       type: Array,
+                       notify: true
+                   },
+                   bounds: {
+                       type: Object,
+                       notify: true
+                   },
+                   feature: {
+                       type: Object,
+                       notify: true
+                   },
+                   map: {
+                       type: Object
+                   },
+                   queryOptions: {
+                       type: Object,
+                       value: null
+                       // proximity: [lat, lon]
+                       // country: 'us'
+                       // autocomplete: true
+                   }
+               }
+               this.observers = [
+                   "_loaded(map, query)"
+               ]
+           }
+
+           _loaded(map, query) {
+               if (!this.map.geocoder) {
+                   this.map.geocoder = L.mapbox.geocoder(this.index)
+               }
+               this.geocode()
+           }
+
+           geocode() {
+               let query = this.query
+               if (this.queryOptions) {
+                   query = Object.assign({query: this.location}, this.queryOptions)
+               }
+               this.map.geocoder.query(query, (err, result) => {
+                   if (err) throw err
+                   this.set('location', result.latlng.reverse())
+                   this.set('bounds', result.bounds)
+                   if (result.results.features && result.results.features[0]) {
+                       this.set('feature', result.results.features[0])
+                   }
+               })
+           }
+       }
+       Polymer(LeafletGeocoder)
+   })();
+   
+  </script>
+</dom-module>

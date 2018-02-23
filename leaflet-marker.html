@@ -20,18 +20,15 @@
                        type: Object
                    },
                    location: {
-                       type: Array,
-                       value: []
+                       type: Array
                    }
                }
                this.observers = [
-                   "_createMarker(map)"
+                   "_createMarker(map, location)"
                ]
            }
 
-           _createMarker(map) {
-               if (!map) return
-
+           _createMarker(map, location) {
                this.marker = new L.marker(new L.LatLng(this.location[1], this.location[0]), this.options)
                let child = Polymer.dom(this).firstElementChild
                if (child) {
